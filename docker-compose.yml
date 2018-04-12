@@ -1,0 +1,54 @@
+version: '3.5'
+
+networks:
+    gig_monitoring_network:
+
+volumes:
+    prometheus_master_data: {}
+    prometheus_slave_data: {}
+
+
+services:
+            
+        prometheus-master:
+            container_name: prometheus-master
+            image: prom/prometheus
+            labels:
+                org.label-schema.group: "gig-monitoring"
+            networks:
+                - gig_monitoring_network                
+            volumes:
+                - ./configs/prometheus-master/prometheus.yml:/etc/prometheus/prometheus.yml
+                - prometheus_master_data:/prometheus
+            ports:
+                - "9090:9090"
+            command:
+                - '--config.file=/etc/prometheus/prometheus.yml'
+                #- '-alertmanager.url=http://alertmanager:9093' # ALERTMANAGER URL inside Docker networks
+                #################################################
+                - '--storage.tsdb.path=/prometheus'
+                - '--web.console.libraries=/etc/prometheus/console_libraries'
+                - '--web.console.templates=/etc/prometheus/consoles'
+            restart: unless-stopped
+
+        prometheus-slave:
+            container_name: prometheus-slave
+            image: prom/prometheus
+            labels:
+                org.label-schema.group: "gig-monitoring"
+            networks:
+                - gig_monitoring_network                
+            volumes:
+                - ./configs/prometheus-slave/prometheus.yml:/etc/prometheus/prometheus.yml
+                - prometheus_slave_data:/prometheus
+            ports:
+                - "9099:9090"
+            command:
+                - '--config.file=/etc/prometheus/prometheus.yml'
+                #- '-alertmanager.url=http://alertmanager:9093' # ALERTMANAGER URL inside Docker networks
+                #################################################
+                - '--storage.tsdb.path=/prometheus'
+                - '--web.console.libraries=/etc/prometheus/console_libraries'
+                - '--web.console.templates=/etc/prometheus/consoles'
+            restart: unless-stopped
+
