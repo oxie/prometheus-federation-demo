@@ -1,7 +1,7 @@
 version: '3.5'
 
 networks:
-    gig_monitoring_network:
+    val_monitoring_network:
 
 volumes:
     prometheus_master_data: {}
@@ -14,9 +14,9 @@ services:
             container_name: prometheus-master
             image: prom/prometheus
             labels:
-                org.label-schema.group: "gig-monitoring"
+                org.label-schema.group: "val-monitoring"
             networks:
-                - gig_monitoring_network                
+                - val_monitoring_network                
             volumes:
                 - ./configs/prometheus-master/prometheus.yml:/etc/prometheus/prometheus.yml
                 - prometheus_master_data:/prometheus
@@ -37,7 +37,7 @@ services:
             labels:
                 org.label-schema.group: "val-monitoring"
             networks:
-                - gig_monitoring_network                
+                - val_monitoring_network                
             volumes:
                 - ./configs/prometheus-slave/prometheus.yml:/etc/prometheus/prometheus.yml
                 - prometheus_slave_data:/prometheus
