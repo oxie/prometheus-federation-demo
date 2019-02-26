@@ -35,7 +35,7 @@ services:
             container_name: prometheus-slave
             image: prom/prometheus
             labels:
-                org.label-schema.group: "gig-monitoring"
+                org.label-schema.group: "val-monitoring"
             networks:
                 - gig_monitoring_network                
             volumes:
